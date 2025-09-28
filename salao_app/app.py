@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash, render_template_string
 import json
 import os
 from werkzeug.utils import secure_filename
@@ -6,18 +6,44 @@ from models import db, Appointment, Photo
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///appointments.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///appointments.db').replace('postgres://', 'postgresql://')
 app.config['SECRET_KEY'] = 'secret'
 db.init_app(app)
 
 with app.app_context():
-    db.drop_all()
+    # db.drop_all()  # Commented for production to avoid losing data
     db.create_all()
 
 @app.route('/')
 def home():
     photos = Photo.query.all()
-    return render_template('index.html', photos=photos)
+    content = """<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Salão de Beleza</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo ao Salão Beauty Shalom</h1>
+        <p class="description">Agende seu horário conosco!</p>
+        <div class="links">
+            <a href="/agendar">Agendar Horário</a>
+        </div>
+        <h2>Nossos Trabalhos</h2>
+        <div class="gallery">
+            {% for photo in photos %}
+            <img src="{{ url_for('static', filename='images/' + photo.filename) }}" alt="{{ photo.description or 'Trabalho do salão' }}">
+            {% endfor %}
+            {% if not photos %}
+            <p>Nenhuma foto adicionada ainda. Volte em breve!</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>"""
+    return render_template_string(content, photos=photos)
 
 @app.route('/agendar', methods=['GET', 'POST'])
 def agendar():
