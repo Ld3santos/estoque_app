@@ -6,7 +6,10 @@ from salao_app.models import db, Appointment, Photo
 from datetime import datetime
 
 app = Flask(__name__, template_folder='salao_app/templates', static_folder='salao_app/static')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///salao_app/instance/appointments.db').replace('postgres://', 'postgresql://')
+import os.path
+db_path = os.path.join(os.path.dirname(__file__), 'instance', 'appointments.db')
+os.makedirs(os.path.dirname(db_path), exist_ok=True)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', f'sqlite:///{db_path}').replace('postgres://', 'postgresql://')
 app.config['SECRET_KEY'] = 'secret'
 db.init_app(app)
 
@@ -124,8 +127,8 @@ def admin_gallery():
                     flash('Foto adicionada com sucesso!')
                 else:
                     flash('Apenas arquivos PNG, JPG ou JPEG são permitidos.')
-            else:
-                flash('Nenhum arquivo enviado.')
+    else:
+        flash('Nenhum arquivo enviado.')
     photos = Photo.query.all()
     return render_template('admin_gallery.html', photos=photos)
 
