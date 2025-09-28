@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Agendamentos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Agendamentos</h1>
+        <table>
+            <tr>
+                <th>Nome</th>
+                <th>Serviço</th>
+                <th>Profissional</th>
+                <th>Data</th>
+                <th>Horário</th>
+                <th>Status</th>
+            </tr>
+            {% for appt in appointments %}
+            <tr>
+                <td>{{ appt.client_name }}</td>
+                <td>{{ appt.service }}</td>
+                <td>{{ appt.professional }}</td>
+                <td>{{ appt.date }}</td>
+                <td>{{ appt.time }}</td>
+                <td>{{ appt.status }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_appointment', appt_id=appt.id) }}" style="display:inline;" onsubmit="return confirm('Deseja deletar este agendamento?');">
+                        <button type="submit" style="background:red; color:white; border:none; padding:5px;">Deletar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <br>
+        <a href="/">Voltar</a> | <a href="/admin/gallery">Gerenciar Fotos</a>
+        <br><br>
+        <a href="/logout">Sair</a>
+    </div>
+</body>
+</html>

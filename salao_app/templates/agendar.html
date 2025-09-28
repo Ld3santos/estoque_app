@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Agendar Horário</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Agendar Horário</h1>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+            {% for message in messages %}
+              <li style="color: green;">{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        <form method="POST">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" required><br><br>
+            <label for="service">Serviço:</label>
+            <select id="service" name="service" required>
+                <option value="Corte de Cabelo">Corte de Cabelo</option>
+                <option value="Progressiva">Progressiva</option>
+                <option value="Manicure">Mão</option>
+                <option value="Manicure">Pé</option>
+                <option value="Manicure e Pedicure">Manicure e Pedicure</option>
+            </select><br><br>
+            <label for="professional">Profissional:</label>
+            <select id="professional" name="professional" required>
+                <option value="Marinez (Cabeleireira)">Marinez (Cabeleireira)</option>
+                <option value="Marinez (Bronze)">Marinez (Bronze)</option>
+                <option value="Juh (Manicure)">Juh (Manicure)</option>
+                <option value="Marinez (Manicure)">Marinez (Manicure)</option>
+            </select><br><br>
+            <label for="date">Data:</label>
+            <input type="date" id="date" name="date" required onchange="fetchAvailableTimes(this.value)"><br><br>
+            <label for="time">Horário:</label>
+            <select id="time" name="time" required></select><br><br>
+            <button type="submit">Agendar</button>
+        </form>
+        <br>
+        <a href="/">Voltar</a>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

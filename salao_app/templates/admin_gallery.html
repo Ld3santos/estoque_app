@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Gerenciar Fotos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciar Fotos da Galeria</h1>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+            {% for message in messages %}
+              <li style="color: green;">{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        <h2>Adicionar Nova Foto</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="file">Foto (PNG, JPG, JPEG):</label>
+            <input type="file" id="file" name="file" required><br><br>
+            <label for="description">Descrição (opcional):</label>
+            <input type="text" id="description" name="description" maxlength="200"><br><br>
+            <button type="submit">Upload</button>
+        </form>
+        <br>
+        <h2>Fotos Atuais</h2>
+        {% if photos %}
+        <table>
+            <tr>
+                <th>Imagem</th>
+                <th>Descrição</th>
+                <th>Data Upload</th>
+                <th>Ações</th>
+            </tr>
+            {% for photo in photos %}
+            <tr>
+                <td><img src="{{ url_for('static', filename='images/' + photo.filename) }}" alt="{{ photo.description or 'Foto' }}" style="width:100px; height:auto;"></td>
+                <td>{{ photo.description or 'Sem descrição' }}</td>
+                <td>{{ photo.uploaded_at.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('delete_photo', photo_id=photo.id) }}" style="display:inline;" onsubmit="return confirm('Deseja deletar esta foto?');">
+                        <button type="submit" style="background:red; color:white; border:none; padding:5px;">Deletar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>Nenhuma foto adicionada ainda.</p>
+        {% endif %}
+        <br>
+        <a href="/admin">Voltar para Agendamentos</a> | <a href="/logout">Sair</a>
+    </div>
+</body>
+</html>

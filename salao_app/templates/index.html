@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Salão de Beleza</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo ao Salão Beauty Shalom</h1>
+        <p class="description">Agende seu horário conosco!</p>
+        <div class="links">
+            <a href="/agendar">Agendar Horário</a>
+        </div>
+        <h2>Nossos Trabalhos</h2>
+        <div class="gallery">
+            {% for photo in photos %}
+            <img src="{{ url_for('static', filename='images/' + photo.filename) }}" alt="{{ photo.description or 'Trabalho do salão' }}">
+            {% endfor %}
+            {% if not photos %}
+            <p>Nenhuma foto adicionada ainda. Volte em breve!</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
