@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn salao_app.app:app
